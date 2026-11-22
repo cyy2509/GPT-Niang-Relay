@@ -353,9 +353,11 @@ function render(value) {
       element.innerHTML =
         '<div class="row-top"><span class="row-label"></span><span class="row-left"></span></div><div class="track"><div class="bar"></div></div><div class="reset"></div>';
       $("rows").append(element);}
+      element.classList.toggle('money-row', value.quota.monetary === true);
       element.querySelector(".row-label").textContent = row.label;
       const left = element.querySelector(".row-left");
       left.textContent = row.leftText;
+      left.title = row.tooltip ?? "";
       left.style.color = row.valueColor;
       const bar = element.querySelector(".bar");
       bar.style.backgroundImage='';bar.classList.remove('flow-fill');

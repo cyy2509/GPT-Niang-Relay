@@ -2,7 +2,7 @@ name: Windows Beta Release
 on:
   workflow_dispatch:
   push:
-    tags: ['v1.4.0-beta.5']
+    tags: ['v1.4.0-beta.6']
 permissions:
   contents: write
 jobs:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: v1.4.0-beta.5
+          ref: v1.4.0-beta.6
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -29,6 +29,6 @@ jobs:
           $zip = Get-Item dist/javascript-beta/*-windows-js.zip
           $sums = 'dist/javascript-beta/SHA256SUMS.txt'
           if ((Get-FileHash $zip.FullName).Hash -ne ((Get-Content $sums) -split '\s+')[0]) { throw 'Checksum mismatch' }
-          gh release create v1.4.0-beta.5 $zip.FullName $sums --verify-tag --prerelease --title 'GPT Niang Relay v1.4.0-beta.5' --notes-file windows-js/RELEASE_NOTES.md
+          gh release create v1.4.0-beta.6 $zip.FullName $sums --verify-tag --prerelease --title 'GPT Niang Relay v1.4.0-beta.6' --notes-file windows-js/RELEASE_NOTES.md
           if ($LASTEXITCODE) { throw 'Release publication failed' }
 

@@ -118,6 +118,18 @@ button:hover {
     700 24px/25px "Segoe UI",
     sans-serif;
 }
+.money-row .row-top { gap: 6px; }
+.money-row .row-label { flex: none; white-space: nowrap; }
+.money-row .row-left {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.money-row .track { display: none; }
+.money-row .reset { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .track {
   height: 4px;
   background: #eae4f3;

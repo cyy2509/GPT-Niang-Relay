@@ -74,12 +74,24 @@ export function formatQuota(status, mode = "countdown", now = Date.now()) {
   if(status?.source==='api-balance'){
     const balance=status.balance;
     const fresh=status.queryOk && now-(status.observedAt??0)<=180000;
-    const format=value=>Number.isFinite(value)?`${value.toLocaleString('zh-CN',{maximumSignificantDigits:12})} ${balance?.currency??''}`:'—';
-    const detail=status.error ?? (fresh?'站点实时余额':'上次查询结果');
-    const row=(prefix,label,value,resetText)=>({prefix,label,visible:true,leftText:format(value),resetText,bar:0,valueColor:fresh?'#745A98':'#95889F'});
-    const rows=[row('short','账户余额',balance?.amount,detail)];
-    if(Number.isFinite(balance?.todaySpent))rows.push(row('week','今日实扣',balance.todaySpent,'站点统计'));
-    return {header:balance&&!fresh?'上次余额':'API 余额',headerTooltip:detail,text:detail,rows};
+    const currency = /^[A-Z]{3}$/.test(balance?.currency ?? '') ? balance.currency : '';
+    const detail = status.error ?? (fresh ? '站点实时余额' : '上次查询结果');
+    const row = (prefix, label, value, resetText) => {
+      let leftText = '—';
+      if (Number.isFinite(value)) {
+        const absolute = Math.abs(value);
+        leftText = absolute >= 1e6 || (absolute > 0 && absolute < 0.0001)
+          ? value.toExponential(2)
+          : value.toLocaleString('zh-CN', {maximumFractionDigits: 4});
+      }
+      return {prefix, label, visible: true, leftText, resetText, bar: 0,
+        tooltip: Number.isFinite(value) ? `${value} ${currency}`.trim() : '',
+        valueColor: fresh ? '#745A98' : '#95889F'};
+    };
+    const rows = [row('short', '账户余额', balance?.amount, detail)];
+    if (Number.isFinite(balance?.todaySpent)) rows.push(row('week', '今日实扣', balance.todaySpent, '站点统计'));
+    const title = balance && !fresh ? '上次余额' : 'API 余额';
+    return {header: currency ? `${title} · ${currency}` : title, headerTooltip: detail, text: detail, rows, monetary: true};
   }
   const seconds = Math.floor(now / 1000),
     age = status?.observedAt
